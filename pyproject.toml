@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "trivia-api"
+version = "0.1.0"
+description = "está API permite jugar juegos de trivia(preguntas y respuestas)"
+authors = ["Juan Delgado <juanddelgadoguerra@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.1.0"
+flask-sqlalchemy = "^3.1.1"
+flask-migrate = "^4.1.0"
+python-dotenv = "^1.0.1"
+flask-restx = "^1.3.0"
+flask-cors = "^5.0.1"
+sqlalchemy-sqlitecloud = "^0.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
