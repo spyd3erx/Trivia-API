@@ -1,6 +1,6 @@
 from flask import Flask
 from app.config import DevelopmentConfig
-from app.ext import db, migrate, cors
+from app.ext import db, migrate, cors, jwt
 
 
 def create_app():
@@ -14,6 +14,8 @@ def create_app():
     cors.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
+
     
     @app.route('/')
     def index():

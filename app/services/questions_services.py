@@ -17,7 +17,12 @@ def normalize_text(text):
 def get_random_question():
     """This function returns a question based on the category and difficulty"""
     random_question = Question.query.order_by(func.random()).first()
-    return random_question
+    
+    if random_question:
+        # Convertir el objeto SQLAlchemy en un diccionario que coincida con el modelo
+        return random_question
+    else:
+        return {'message': 'No hay preguntas disponibles'}, 404
 
 def get_question_args(difficulty, category=None):
     """Esta función retorna una pregunta basada en la categoría y dificultad"""

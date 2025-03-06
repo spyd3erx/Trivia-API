@@ -8,9 +8,9 @@ api.init_app(api_bp, title='Trivia API',version='0.1.0',
 
 
 from app.routes.questions import api as questions_ns
-from app.routes.users import api as users_ns
 from app.routes.score import api as score_ns
+from app.routes.auth import api as auth_ns
 
-api.add_namespace(users_ns, path='/user')
+api.add_namespace(auth_ns, path='/auth')
 api.add_namespace(questions_ns, path='/question')
 api.add_namespace(score_ns, path='/score')

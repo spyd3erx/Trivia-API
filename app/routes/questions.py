@@ -1,8 +1,21 @@
 from flask_restx import Resource, Namespace, fields, reqparse
 from app.services.questions_services import get_random_question, get_question_args, validate_answer
+from flask_jwt_extended import jwt_required
+from app.ext import jwt
+
+
+
+authorizations = {
+    'jsonWebToken': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': 'Ingresa el token JWT en el formato: Bearer <token>'
+    }
+}
 
 #crear namespace para los endpoints de preguntas
-api = Namespace('Questions', description='Operations related to questions')
+api = Namespace('Questions', authorizations=authorizations, security='jsonWebToken', description='Operations related to questions')
 
 # Definir los parámetros de la query con reqparse
 query_parser = reqparse.RequestParser()
@@ -33,9 +46,10 @@ question_answer_model = api.model('QuestionAnswer', {
 @api.route('/')
 class Question(Resource):
 
+    @jwt_required()
     @api.expect(query_parser) #indica que el endpoint espera datos de entrada(parametros de la query)
     @api.marshal_with(question_summary_model)
-    @api.doc(description="Obtener una pregunta en función de la categoría(opcional) y la dificultad(requerida)")
+    @api.doc(security='jsonWebToken', description="Obtener una pregunta en función de la categoría(opcional) y la dificultad(requerida)")
     def get(self):
         args = query_parser.parse_args()
         category = args.get('category')
@@ -46,17 +60,19 @@ class Question(Resource):
 @api.route('/random')
 class QuestionRandom(Resource):
 
+    @jwt_required()
     @api.marshal_with(question_summary_model)
-    @api.doc(description="Obtener una pregunta aleatoria")
+    @api.doc(security='jsonWebToken',description="Obtener una pregunta aleatoria")
     def get(self):
         return get_random_question()
     
 @api.route('/answer')
 class Answer(Resource):
 
+    @jwt_required()
     @api.expect(answer_model)
     @api.marshal_with(question_answer_model)
-    @api.doc(description="Enviar la respuesta a una pregunta")
+    @api.doc(security='jsonWebToken',description="Enviar la respuesta a una pregunta")
     def post(self):
         answer = api.payload #recibe los datos de entrada
         question_id = answer.get("question_id")
