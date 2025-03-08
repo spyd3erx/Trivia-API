@@ -1,6 +1,6 @@
 from flask_restx import Resource, Namespace, fields, reqparse
 from app.services.questions_services import get_random_question, get_question_args, validate_answer
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.ext import jwt
 
 
@@ -36,8 +36,8 @@ question_summary_model = api.model('QuestionSummary', {
 
 # Definir el modelo de respuesta de la pregunta con fields
 question_answer_model = api.model('QuestionAnswer', {
+    'message': fields.String(description="Mensaje de respuesta"),
     'is_correct': fields.Boolean(description="Indica si la respuesta es correcta"),
-    'correct_answer': fields.String(description="Respuesta correcta"),
     'difficulty': fields.String(description="Dificultad de la pregunta"),
     'category': fields.String(description="Categoría de la pregunta")
 })
@@ -74,7 +74,8 @@ class Answer(Resource):
     @api.marshal_with(question_answer_model)
     @api.doc(security='jsonWebToken',description="Enviar la respuesta a una pregunta")
     def post(self):
+        user_id = get_jwt_identity()
         answer = api.payload #recibe los datos de entrada
         question_id = answer.get("question_id")
         user_answer = answer.get("user_answer")
-        return  validate_answer(question_id, user_answer)
+        return  validate_answer(question_id, user_answer, user_id)

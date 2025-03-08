@@ -13,6 +13,11 @@ auth_register_model = api.model('AuthRegister', {
     'username': fields.String(required=True, description='username')
 })
 
+auth_login_model = api.model('AuthLogin', {
+    'message': fields.String(description='message'),
+    'access_token': fields.String(description='access_token')
+})
+
 
 @api.route('/register')    
 class Register(Resource):
@@ -27,6 +32,7 @@ class Register(Resource):
 @api.route('/login')
 class Login(Resource):
     @api.expect(auth_model)
+    @api.marshal_with(auth_login_model)
     @api.doc(description='login')
     def post(self):
         data = api.payload

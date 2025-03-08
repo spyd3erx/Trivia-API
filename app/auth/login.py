@@ -24,9 +24,11 @@ def login(username, password):
 
     user = User.query.filter_by(username = username).one_or_none()
 
-    if user is not None and check_password_hash(user.password, password):
+    if user and check_password_hash(user.password, password):
         access_token = create_access_token(identity=username)
-        response = jsonify(message='success', access_token=access_token)
-        return make_response(response, 200)
+        response = {
+            'message': 'login successful',
+            'access_token': access_token}
+        return response, 200
     else:
-        return jsonify(message='login failed'), 401
+        return {"message": 'login failed'}, 401

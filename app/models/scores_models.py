@@ -6,8 +6,8 @@ class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_question = db.Column(db.Integer, db.ForeignKey('questions.id'), nullable=False)
-    total_correct = db.Column(db.Integer, nullable=False)
-    total_attemps = db.Column(db.Integer, nullable=False)
+    attemps = db.Column(db.Integer, nullable=False)
+    is_correct = db.Column(db.Boolean, default=False, nullable=False)
     solved_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', back_populates='scores')  # Relación muchos a uno

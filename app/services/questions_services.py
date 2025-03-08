@@ -1,4 +1,4 @@
-from app.models.questions_models import Question
+from app.models import Question, Score
 from sqlalchemy.sql import func
 import unicodedata
 from app import db
@@ -39,20 +39,45 @@ def get_question_args(difficulty, category=None):
 
     return question
 
-def validate_answer(question_id, user_answer):
+def validate_answer(question_id, user_answer, id_user):
     """This function validates the answer to a question(id)"""
 
-    #get the question from the database based on the id
+    # Obtén la pregunta desde la base de datos basada en el ID
     check_answer = Question.query.get(question_id)
     if not check_answer:
         return None
-
-    #normalize the user answer and the correct answer
-    is_correct = normalize_text(check_answer.correct_answer) == normalize_text(user_answer)
-
-    return {
-            "is_correct": is_correct,
-            "correct_answer": check_answer.correct_answer,
+    
+    # Verifica si el usuario ya respondió correctamente esta pregunta
+    existing_score = Score.query.filter_by(id_user=id_user, id_question=question_id, is_correct=True).first()
+    if existing_score:
+        return {
+            "message": "You have already answered this question correctly.",
+            "is_correct": True,
             "difficulty": check_answer.difficulty,
             "category": check_answer.category
-        }, 200 
+        }, 400
+    
+    # Normaliza la respuesta del usuario y la respuesta correcta
+    is_correct = normalize_text(check_answer.correct_answer) == normalize_text(user_answer)
+
+    # Obtén o crea un registro de intentos para esta pregunta y usuario
+    score = Score.query.filter_by(id_user=id_user, id_question=question_id).first()
+    if not score:
+        # Si no existe un registro, crea uno nuevo con 1 intento
+        score = Score(id_user=id_user, id_question=question_id, attemps=1, is_correct=is_correct)
+    else:
+        # Si ya existe un registro, incrementa el número de intentos
+        score.attemps += 1
+        score.is_correct = is_correct  # Actualiza el campo is_correct
+
+    # Guarda el registro en la base de datos
+    db.session.add(score)
+    db.session.commit()
+
+    # Devuelve la respuesta
+    return {
+            "message": "Answer received",
+            "is_correct": is_correct,
+            "difficulty": check_answer.difficulty,
+            "category": check_answer.category
+        }, 200
