@@ -15,3 +15,10 @@ class Score(Resource):
     @api.doc(description='Just a test endpoint')
     def get(self):
         return {'score': 0}
+
+@api.route('/<int:id_user>')
+class Score(Resource):
+    @api.marshal_with(score_model)
+    @api.doc(description='Just a test endpoint')
+    def get(self, id_user):
+        return {'score': 0}

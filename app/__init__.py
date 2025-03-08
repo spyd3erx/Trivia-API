@@ -1,7 +1,7 @@
 from flask import Flask
 from app.config import DevelopmentConfig
 from app.ext import db, migrate, cors, jwt
-
+from app.models import *
 
 def create_app():
     """This function created a object Flask
@@ -16,7 +16,6 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    
     @app.route('/')
     def index():
         return 'Hello World'

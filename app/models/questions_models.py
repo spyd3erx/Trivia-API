@@ -1,6 +1,5 @@
 from app import db
 
-
 class Question(db.Model):
     __tablename__ = 'questions'
 
@@ -10,6 +9,7 @@ class Question(db.Model):
     difficulty = db.Column(db.String(10), nullable=False)
     category = db.Column(db.String(15), nullable=False)
 
+    scores = db.relationship('Score', back_populates='question')  # Relación uno a muchos
 
     def __str__(self):
         return f"(questions <id:{self.id}, question:{self.question_text}>)"

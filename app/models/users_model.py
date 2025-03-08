@@ -8,5 +8,7 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    scores = db.relationship('Score', back_populates='user')  # Relación uno a muchos
+
     def __str__(self):
         return f"(users <username:{self.username}>)"
