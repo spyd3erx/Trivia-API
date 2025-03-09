@@ -1,7 +1,10 @@
 from flask_restx import Namespace, Resource, fields
 from app.auth.login import register, login
+from app.api import authorizations
 
-api = Namespace('auth', description='auth operations')
+api = Namespace('auth',
+        authorizations=authorizations,
+        security='jsonWebToken', description='auth operations')
 
 auth_model = api.model('Auth', {
     'username': fields.String(required=True, description='username'),

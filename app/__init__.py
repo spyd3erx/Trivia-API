@@ -16,11 +16,9 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    @app.route('/')
-    def index():
-        return 'Hello World'
+    #configurar rutas y swagger
+    from app.api import create_swagger
+    create_swagger(app)
 
-    from app.api import api_bp
-    app.register_blueprint(api_bp, url_prefix='/api/v1')
 
     return app

@@ -1,21 +1,15 @@
 from flask_restx import Resource, Namespace, fields, reqparse
 from app.services.questions_services import get_random_question, get_question_args, validate_answer
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.ext import jwt
+
+from app.api import authorizations
 
 
-
-authorizations = {
-    'jsonWebToken': {
-        'type': 'apiKey',
-        'in': 'header',
-        'name': 'Authorization',
-        'description': 'Ingresa el token JWT en el formato: Bearer <token>'
-    }
-}
 
 #crear namespace para los endpoints de preguntas
-api = Namespace('Questions', authorizations=authorizations, security='jsonWebToken', description='Operations related to questions')
+api = Namespace('Questions',
+        authorizations=authorizations,
+        security='jsonWebToken', description='Operations related to questions')
 
 # Definir los parámetros de la query con reqparse
 query_parser = reqparse.RequestParser()
