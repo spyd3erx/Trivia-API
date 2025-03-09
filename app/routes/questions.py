@@ -75,6 +75,7 @@ class Answer(Resource):
     @api.doc(security='jsonWebToken',description="Enviar la respuesta a una pregunta")
     def post(self):
         user_id = get_jwt_identity()
+        print(user_id)
         answer = api.payload #recibe los datos de entrada
         question_id = answer.get("question_id")
         user_answer = answer.get("user_answer")

@@ -21,14 +21,13 @@ def register(username, password):
 
 
 def login(username, password):
-
-    user = User.query.filter_by(username = username).one_or_none()
-
+    user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
-        access_token = create_access_token(identity=username)
+        access_token = create_access_token(identity=str(user.id)) # Create a token based on the user id, need to be a string
         response = {
-            'message': 'login successful',
-            'access_token': access_token}
+            'message': 'Login successful',
+            'access_token': access_token
+        }
         return response, 200
     else:
-        return {"message": 'login failed'}, 401
+        return {"message": "Login failed: Invalid username or password"}, 401
