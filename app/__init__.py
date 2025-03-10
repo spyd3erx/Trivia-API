@@ -1,6 +1,6 @@
 from flask import Flask
 from app.config import DevelopmentConfig
-from app.ext import db, migrate, cors, jwt
+from app.ext import db, migrate, cors, jwt, limiter
 from app.models import *
 
 def create_app():
@@ -15,10 +15,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    limiter.init_app(app)
 
     #configurar rutas y swagger
-    from app.api import create_swagger
-    create_swagger(app)
+    from app.api import create_api
+    create_api(app)
 
 
     return app

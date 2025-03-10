@@ -10,7 +10,7 @@ authorizations = {
     }
 }
 
-def create_swagger(app):
+def create_api(app):
 
     # Inicializar api con authorizations y security
     api.init_app(

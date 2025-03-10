@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.auth.login import register, login
 from app.api import authorizations
+from app.ext import limiter
 
 api = Namespace('auth',
         authorizations=authorizations,
@@ -37,6 +38,7 @@ class Login(Resource):
     @api.expect(auth_model)
     @api.marshal_with(auth_login_model)
     @api.doc(description='login')
+    @limiter.limit("5 per minute")
     def post(self):
         data = api.payload
         user, password = data['username'], data['password']
