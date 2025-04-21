@@ -1,0 +1,7 @@
+__pycache__/
+instance/
+migrations/
+.gitignore
+.git
+Dockerfile
+wsgi.py
