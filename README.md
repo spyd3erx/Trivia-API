@@ -53,5 +53,5 @@ Trivia-API es una API RESTful desarrollada con Flask y Flask-Restx que permite j
 
 2. Ejecuta el contenedor:
     ```bash
-    docker run -p 8000:8000 trivia-api
+    docker run -p 8000:8000 --env-file .env trivia-api
     ```
